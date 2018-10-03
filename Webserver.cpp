@@ -37,11 +37,12 @@ void Webserver::begin( Config *config, LED *led ) {
 //  MDNS.begin( conf.hostname );
 
   // HTTP callbacks bound to class member functions
-  server.on("/",         HTTP_GET,  std::bind(&Webserver::handleWebRequests, this));
-  server.on("/config",   HTTP_GET,  std::bind(&Webserver::jsonConfigData, this));
-  server.on("/network",  HTTP_POST, std::bind(&Webserver::processNetworkSettings, this));
-  server.on("/reset",    HTTP_POST, std::bind(&Webserver::processConfigReset, this));
-  server.on("/settings", HTTP_POST, std::bind(&Webserver::processSettings, this));
+  server.on("/",          HTTP_GET,  std::bind(&Webserver::handleWebRequests, this));
+  server.on("/config",    HTTP_GET,  std::bind(&Webserver::jsonConfigData, this));
+  server.on("/display",   HTTP_GET,  std::bind(&Webserver::setDisplay, this));
+  server.on("/network",   HTTP_POST, std::bind(&Webserver::processNetworkSettings, this));
+  server.on("/reset",     HTTP_POST, std::bind(&Webserver::processConfigReset, this));
+  server.on("/settings",  HTTP_POST, std::bind(&Webserver::processSettings, this));
   server.on("/webupdate", HTTP_POST, std::bind(&Webserver::runWebUpdate, this));
   server.onNotFound(std::bind( &Webserver::handleWebRequests, this));
 
@@ -276,6 +277,15 @@ void Webserver::processNetworkSettings() {
   // Disconnect the wifi and re-run the setup routine
   WiFi.disconnect( true );
   setup();
+}
+
+
+// GET /display
+void Webserver::setDisplay() {
+    _led.setDisplay(server.arg("mode"), server.arg("duration"));
+
+    // Success to the client.
+    httpReturn( 200, "application/json", "{\"status\": \"ok\"}" );
 }
 
 void Webserver::runWebUpdate() {

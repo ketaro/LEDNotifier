@@ -23,30 +23,83 @@ LED::LED() {
 }
 
 
+//
+// Public Functions
+//
+
 void LED::begin( Config *config ) {
-  // Keep a reference to the config
-  _config = config;
-
-  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(_leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-  FastLED.setBrightness(  BRIGHTNESS );
+    // Keep a reference to the config
+    _config = config;
   
-  _currentPalette = RainbowColors_p;
-  _currentBlending = LINEARBLEND;
+    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(_leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+    FastLED.setBrightness(  BRIGHTNESS );
 
+    // Display for 10 seconds for going to idle
+    _currentPalette = RainbowColors_p;
+    _currentBlending = LINEARBLEND;
+
+    _displayStart = millis();
+    _duration = 10;
 }
+
 
 void LED::loop() {
-  ChangePalettePeriodically();
-  
-  static uint8_t startIndex = 0;
-  startIndex = startIndex + 1; /* motion speed */
-  
-  FillLEDsFromPaletteColors( startIndex);
-  
-  FastLED.show();
-  FastLED.delay(1000 / UPDATES_PER_SECOND);  
+    static uint8_t startIndex = 0;
+    startIndex = startIndex + 1; /* motion speed */
+    
+    FillLEDsFromPaletteColors( startIndex);
+    
+    FastLED.show();
+    FastLED.delay(1000 / UPDATES_PER_SECOND);
+
+    if (_duration > 0 && millis() > _displayStart + _duration*1000) {
+      // Switch to "idle" display
+      setDisplay( DISPLAY_IDLE, 0 );
+      SetupIdlePallet();
+      _duration = 0;
+      _displayStart = millis();
+    }
 }
 
+
+void LED::setDisplay( uint8_t mode, uint duration ) {
+    switch (mode) {
+        case DISPLAY_IDLE:
+            _currentPalette = CloudColors_p;
+            _currentBlending = LINEARBLEND;
+            break;
+        case DISPLAY_DARK:
+            // 'black out' all 16 palette entries...
+            fill_solid( _currentPalette, 16, CRGB::Black);
+            break;
+        case DISPLAY_RAINBOW:
+            _currentPalette = RainbowStripeColors_p;
+            _currentBlending = LINEARBLEND;
+            break;
+        case DISPLAY_RANDOM:
+            SetupTotallyRandomPalette();
+            _currentBlending = LINEARBLEND;
+            break;
+        case DISPLAY_BLACKANDWHITE:
+            SetupBlackAndWhiteStripedPalette();
+            _currentBlending = LINEARBLEND; 
+            break;
+        case DISPLAY_PARTY:
+            _currentPalette = PartyColors_p;
+            _currentBlending = LINEARBLEND;
+            break;
+        case DISPLAY_REDALERT:
+            _currentPalette = 
+
+    }
+
+    _duration = duration;
+}
+
+
+//
+// Private Functions
+//
 
 void LED::FillLEDsFromPaletteColors( uint8_t colorIndex)
 {

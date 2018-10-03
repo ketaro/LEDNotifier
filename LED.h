@@ -11,6 +11,17 @@
 
 #define UPDATES_PER_SECOND 100
 
+
+#define DISPLAY_DARK 0
+#define DISPLAY_IDLE 1
+#define DISPLAY_RANDOM 2
+#define DISPLAY_RAINBOW 3
+#define DISPLAY_BLACKANDWHITE 4
+#define DISPLAY_PARTY 5
+#define DISPLAY_REDALERT 6
+
+
+
 extern CRGBPalette16 myRedWhiteBluePalette;
 //extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 
@@ -40,6 +51,14 @@ const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
     CRGB::Black
 };
 
+const TProgmemPalette16 redPalette_p PROGMEM = {
+    CRGB::Red, CRGB::Red, CRGB::Red,
+    CRGB::Black, CRGB::Black, CRGB::Black,
+    CRGB::Red, CRGB::Red, CRGB::Red,
+    CRGB::Black, CRGB::Black, CRGB::Black,
+    CRGB::Red, CRGB::Red,
+    CRGB::Black, CRGB::Black
+}
 
 //
 // LED Library Class
@@ -49,6 +68,7 @@ class LED
     LED();
     void begin( Config *config );
     void loop();
+    void setDisplay( uint8_t mode, uint duration );
     
   private:
     Config     *_config;
@@ -56,6 +76,11 @@ class LED
 
     CRGBPalette16 _currentPalette;
     TBlendType    _currentBlending;
+
+    int       _displayStart;
+    uint8_t   _speed;
+    uint8_t   _duration;    // How long to stay in this mode before going back to idle
+    
 
     void SetupPurpleAndGreenPalette();
     void SetupBlackAndWhiteStripedPalette();
