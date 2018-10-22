@@ -16,6 +16,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 		Authorization: `Basic ${authhash}`,
       }
     });
+    console.log("authorization: Basic " + authhash);
 
     return next.handle( request );
   }

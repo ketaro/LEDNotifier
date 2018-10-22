@@ -20,7 +20,7 @@ export class NetworkComponent implements OnInit {
 
   getNetwork():void {
     this.settingsService.getNetwork()
-	.subscribe( network => this.network = network );
+      .subscribe( network => this.network = network );
   }
 
 }

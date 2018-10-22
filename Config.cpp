@@ -105,12 +105,13 @@ String Config::NetworkJSON(String macaddr) {
   if (String(conf.wifi_pw).length() > 0)
     wifiPassSaved = true;
   
-  String jsonstr = "{\"ver\": \"" + String(conf.version) + "\", " 
+  String jsonstr = "{"
+//                   "\"ver\": \"" + String(conf.version) + "\", " 
                    "\"mac\": \"" + macaddr + "\", "
                    "\"ssid\": \"" + String(conf.ssid) + "\", "
                    "\"wifi_pw\": \"" + String(wifiPassSaved) + "\", "
-                   "\"hostname\": \"" + String(conf.hostname) + "\", "
-                   "\"location\": \"" + String(conf.location) + "\", "
+//                   "\"hostname\": \"" + String(conf.hostname) + "\", "
+//                   "\"location\": \"" + String(conf.location) + "\", "
                    "\"network_type\": \"DHCP\", "
                    "}";
 

@@ -43,6 +43,7 @@ void Webserver::begin( Config *config, LED *led ) {
   server.on("/settings",  HTTP_POST, std::bind(&Webserver::processSettings, this));
   server.on("/webupdate", HTTP_POST, std::bind(&Webserver::runWebUpdate, this));
 
+  server.on("/api/settings/network", HTTP_OPTIONS, std::bind(&Webserver::sendCORS, this));
   server.on("/api/settings/network", HTTP_GET,  std::bind(&Webserver::getNetworkSettings, this));
   server.on("/api/settings/network", HTTP_POST, std::bind(&Webserver::setNetworkSettings, this));
 
@@ -205,6 +206,15 @@ bool Webserver::authRequired() {
 }
 
 
+// OPTIONS - Send CORS headers
+void Webserver::sendCORS() {
+  server.sendHeader( "Access-Control-Allow-Origin", "*" );
+  server.sendHeader( "Access-Control-Allow-Credentials", "false");
+  server.sendHeader( "Access-Control-Allow-Headers", "x-requested-with,authorization,content-type" );
+  server.sendHeader( "Access-Control-Allow-Methods", "GET,OPTIONS,POST" );
+
+  server.send(204);
+}
 
 // POST /reset
 void Webserver::processConfigReset() {

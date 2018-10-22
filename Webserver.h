@@ -44,6 +44,7 @@ class Webserver
     bool authRequired();
     void handleWebRequests();
     void httpReturn(uint16_t httpcode, String mimetype, String content);
+    void sendCORS();
     void processConfigReset();
     void processSettings();
     void getNetworkSettings();
