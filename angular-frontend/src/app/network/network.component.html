@@ -1,0 +1,13 @@
+<h2>Network Details ({{network.ssid}})</h2>
+
+<div><span>mac: </span>{{network.mac}}</div>
+
+<div>
+  <label>ssid: <input [(ngModel)]="network.ssid" placeholder="ssid"></label>
+</div>
+
+<div><span>type: </span>{{network.network_type}}</div>
+
+<div *ngIf="network.network_type">
+  <p>network type stuff</p>
+</div>
