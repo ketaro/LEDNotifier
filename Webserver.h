@@ -44,10 +44,11 @@ class Webserver
     bool authRequired();
     void handleWebRequests();
     void httpReturn(uint16_t httpcode, String mimetype, String content);
-    void jsonConfigData();
     void processConfigReset();
     void processSettings();
-    void processNetworkSettings();
+    void getNetworkSettings();
+    void setNetworkSettings();
+    void setDisplay();
     String get_spiffs_version();
     void check_for_fwupdate();
     void check_for_spiffs_update();

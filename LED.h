@@ -58,7 +58,7 @@ const TProgmemPalette16 redPalette_p PROGMEM = {
     CRGB::Black, CRGB::Black, CRGB::Black,
     CRGB::Red, CRGB::Red,
     CRGB::Black, CRGB::Black
-}
+};
 
 //
 // LED Library Class

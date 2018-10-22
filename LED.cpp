@@ -40,6 +40,8 @@ void LED::begin( Config *config ) {
 
     _displayStart = millis();
     _duration = 10;
+
+    Serial.println( "[LED] begin complete." );
 }
 
 
@@ -54,8 +56,8 @@ void LED::loop() {
 
     if (_duration > 0 && millis() > _displayStart + _duration*1000) {
       // Switch to "idle" display
+      Serial.println( "[LED] Switching to idle mode" );
       setDisplay( DISPLAY_IDLE, 0 );
-      SetupIdlePallet();
       _duration = 0;
       _displayStart = millis();
     }
@@ -89,7 +91,9 @@ void LED::setDisplay( uint8_t mode, uint duration ) {
             _currentBlending = LINEARBLEND;
             break;
         case DISPLAY_REDALERT:
-            _currentPalette = 
+            _currentPalette = redPalette_p;
+            _currentBlending = NOBLEND;
+            break;
 
     }
 

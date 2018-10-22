@@ -99,7 +99,7 @@ void Config::resetConfig() {
 
 
 // Returns a JSON String of the current config
-String Config::JSON(String macaddr) {
+String Config::NetworkJSON(String macaddr) {
   bool wifiPassSaved = false;
 
   if (String(conf.wifi_pw).length() > 0)
@@ -107,9 +107,11 @@ String Config::JSON(String macaddr) {
   
   String jsonstr = "{\"ver\": \"" + String(conf.version) + "\", " 
                    "\"mac\": \"" + macaddr + "\", "
+                   "\"ssid\": \"" + String(conf.ssid) + "\", "
+                   "\"wifi_pw\": \"" + String(wifiPassSaved) + "\", "
                    "\"hostname\": \"" + String(conf.hostname) + "\", "
                    "\"location\": \"" + String(conf.location) + "\", "
-                   "\"ssid\": \"" + String(conf.ssid) + "\" "
+                   "\"network_type\": \"DHCP\", "
                    "}";
 
   return jsonstr;

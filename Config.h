@@ -63,7 +63,7 @@ class Config
 
     void reboot();
 
-    String JSON(String macaddr);
+    String NetworkJSON(String macaddr);
 
     configuration conf;
 

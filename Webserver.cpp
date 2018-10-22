@@ -38,12 +38,14 @@ void Webserver::begin( Config *config, LED *led ) {
 
   // HTTP callbacks bound to class member functions
   server.on("/",          HTTP_GET,  std::bind(&Webserver::handleWebRequests, this));
-  server.on("/config",    HTTP_GET,  std::bind(&Webserver::jsonConfigData, this));
   server.on("/display",   HTTP_GET,  std::bind(&Webserver::setDisplay, this));
-  server.on("/network",   HTTP_POST, std::bind(&Webserver::processNetworkSettings, this));
   server.on("/reset",     HTTP_POST, std::bind(&Webserver::processConfigReset, this));
   server.on("/settings",  HTTP_POST, std::bind(&Webserver::processSettings, this));
   server.on("/webupdate", HTTP_POST, std::bind(&Webserver::runWebUpdate, this));
+
+  server.on("/api/settings/network", HTTP_GET,  std::bind(&Webserver::getNetworkSettings, this));
+  server.on("/api/settings/network", HTTP_POST, std::bind(&Webserver::setNetworkSettings, this));
+
   server.onNotFound(std::bind( &Webserver::handleWebRequests, this));
 
   // Attach the OTA update service
@@ -193,15 +195,6 @@ bool Webserver::loadFromSpiffs( String path ){
 }
 
 
-// GET /config
-// Return a JSON string of the current settings
-void Webserver::jsonConfigData() {
-  if ( authRequired() ) return;  // Page requires authentication
-    
-  String jsonstr = _config->JSON( String(WiFi.macAddress()) );
-  
-  httpReturn(200, "application/json", jsonstr);
-}
 
 bool Webserver::authRequired() {
   if ( !server.authenticate( HTTP_AUTH_USER, _config->conf.http_pw ) ) {
@@ -248,8 +241,19 @@ void Webserver::processSettings() {
 }
 
 
+// GET /api/settings/network
+// Return a JSON string of the network settings
+void Webserver::getNetworkSettings() {
+  if ( authRequired() ) return;  // Page requires authentication
+    
+  String jsonstr = _config->NetworkJSON( String(WiFi.macAddress()) );
+  
+  httpReturn(200, "application/json", jsonstr);
+}
+
+
 // POST /network
-void Webserver::processNetworkSettings() {
+void Webserver::setNetworkSettings() {
   if ( authRequired() ) return;  // Page requires authentication
 
   if (server.args() < 2) {
@@ -282,7 +286,7 @@ void Webserver::processNetworkSettings() {
 
 // GET /display
 void Webserver::setDisplay() {
-    _led.setDisplay(server.arg("mode"), server.arg("duration"));
+    _led->setDisplay(server.arg("mode").toInt(), server.arg("duration").toInt());
 
     // Success to the client.
     httpReturn( 200, "application/json", "{\"status\": \"ok\"}" );
