@@ -1,0 +1,23 @@
+<div *ngIf="led">
+	<h2>LED Display</h2>
+
+	<div>
+		<label>
+			Number of LEDs: 
+			<input [(ngModel)]="led.leds">
+		</label>
+	</div>
+
+	<div>
+		<label>
+			Speed: 
+			<input [(ngModel)]="led.fps" min="1" max="300">
+		</label>
+	</div>
+
+	<button (click)="update()">update</button>
+
+</div>
+<div *ngIf="!network">
+	<h2>Loading LED Display State...</h2>
+</div>
