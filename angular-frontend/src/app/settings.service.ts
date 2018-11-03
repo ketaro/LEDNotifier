@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { Network } from './network';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
 
@@ -10,7 +10,8 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SettingsService {
-  private settingsUrl = 'http://192.168.4.1:8080/api/settings';
+  //private settingsUrl = 'http://192.168.4.1:8080/api/settings';
+  private settingsUrl = 'http://10.0.80.188:8080/api/settings';
 
   constructor( 
 	private http: HttpClient,
@@ -26,8 +27,25 @@ export class SettingsService {
 			);
   }
 
+  // Send updated network settings to device
+  //
+  updateNetwork( network:Network ):Observable<any> {
+	let data = new FormData();
+
+	data.append( 'ssid', network.ssid );
+	if ( network.wifi_pw )
+		data.append( 'wifi_pw', network.wifi_pw );
+
+	return this.http.post( this.settingsUrl + '/network', data )
+			.pipe(
+				tap( _ => this.log( '[SettingsService] update network settings' ) ),
+				catchError( this.handleError<any>('updateNetwork') )
+			);
+  }
+
+
   private log( message: string ) {
-    this.messageService.add( '[Settings] ${message}' );
+    this.messageService.add( `[Settings] ${message}` );
 	}
 
 	/**

@@ -1,4 +1,5 @@
 export class LED {
   leds: number;
-  fps: number;
+  delay: number;
+  brightness: number;
 }

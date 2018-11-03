@@ -30,6 +30,12 @@ export class LedComponent implements OnInit {
 	}
 
 
+	update():void {
+		console.log('click!');
+		this.ledService.updateDisplay( this.led )
+			.subscribe( );
+	}
+
 	goBack():void {
 		this.location.back();
 	}

@@ -68,7 +68,10 @@ class LED
     LED();
     void begin( Config *config );
     void loop();
+    String getJSON();
     void setDisplay( uint8_t mode, uint duration );
+    void setDelay( uint delay );
+    void setBrightness( uint8_t value );
     
   private:
     Config     *_config;
@@ -77,9 +80,9 @@ class LED
     CRGBPalette16 _currentPalette;
     TBlendType    _currentBlending;
 
-    int       _displayStart;
-    uint8_t   _speed;
-    uint8_t   _duration;    // How long to stay in this mode before going back to idle
+    uint     _displayStart;
+    uint     _delay;
+    uint     _duration;    // How long to stay in this mode before going back to idle
     
 
     void SetupPurpleAndGreenPalette();

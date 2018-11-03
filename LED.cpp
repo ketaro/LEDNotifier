@@ -32,7 +32,7 @@ void LED::begin( Config *config ) {
     _config = config;
   
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(_leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-    FastLED.setBrightness(  BRIGHTNESS );
+    FastLED.setBrightness( BRIGHTNESS );
 
     // Display for 10 seconds for going to idle
     _currentPalette = RainbowColors_p;
@@ -40,6 +40,7 @@ void LED::begin( Config *config ) {
 
     _displayStart = millis();
     _duration = 10;
+    _delay = 100;
 
     Serial.println( "[LED] begin complete." );
 }
@@ -49,10 +50,10 @@ void LED::loop() {
     static uint8_t startIndex = 0;
     startIndex = startIndex + 1; /* motion speed */
     
-    FillLEDsFromPaletteColors( startIndex);
+    FillLEDsFromPaletteColors( startIndex );
     
     FastLED.show();
-    FastLED.delay(1000 / UPDATES_PER_SECOND);
+    FastLED.delay( _delay );
 
     if (_duration > 0 && millis() > _displayStart + _duration*1000) {
       // Switch to "idle" display
@@ -64,7 +65,28 @@ void LED::loop() {
 }
 
 
+String LED::getJSON() {
+  String jsonstr = "{"
+                   "\"leds\": " + String(NUM_LEDS) + ", "
+                   "\"delay\": " + String(_delay) + " "
+                   "}";
+
+  return jsonstr;
+}
+
+void LED::setDelay( uint delay ) {
+    _delay = delay;
+    Serial.println( "[LED] delay: " + String( _delay ) );
+}
+
+
+void LED::setBrightness( uint8_t value ) {
+    FastLED.setBrightness( value );
+    Serial.println( "[LED] Brightness: " + String( value ) );
+}
+
 void LED::setDisplay( uint8_t mode, uint duration ) {
+    Serial.println( "[LED] setDisplay " + String(mode) + " for " + String(duration) );
     switch (mode) {
         case DISPLAY_IDLE:
             _currentPalette = CloudColors_p;
@@ -98,6 +120,7 @@ void LED::setDisplay( uint8_t mode, uint duration ) {
     }
 
     _duration = duration;
+    _displayStart = millis();
 }
 
 

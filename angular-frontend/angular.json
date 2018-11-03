@@ -23,9 +23,14 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/bootstrap/css/bootstrap.min.css",
+              "node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css"
             ],
-            "scripts": []
+            "scripts": [
+			  "node_modules/bootstrap/dist/js/bootstrap.min.js",
+			  "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"
+			]
           },
           "configurations": {
             "production": {
@@ -72,7 +77,8 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/bootstrap/css/bootstrap.min.css"
             ],
             "scripts": [],
             "assets": [

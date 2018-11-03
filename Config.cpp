@@ -109,10 +109,10 @@ String Config::NetworkJSON(String macaddr) {
 //                   "\"ver\": \"" + String(conf.version) + "\", " 
                    "\"mac\": \"" + macaddr + "\", "
                    "\"ssid\": \"" + String(conf.ssid) + "\", "
-                   "\"wifi_pw\": \"" + String(wifiPassSaved) + "\", "
+//                   "\"wifi_pw\": \"" + String(wifiPassSaved) + "\", "
 //                   "\"hostname\": \"" + String(conf.hostname) + "\", "
 //                   "\"location\": \"" + String(conf.location) + "\", "
-                   "\"network_type\": \"DHCP\", "
+                   "\"network_type\": \"DHCP\""
                    "}";
 
   return jsonstr;

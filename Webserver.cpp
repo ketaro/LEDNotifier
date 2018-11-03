@@ -47,6 +47,12 @@ void Webserver::begin( Config *config, LED *led ) {
   server.on("/api/settings/network", HTTP_GET,  std::bind(&Webserver::getNetworkSettings, this));
   server.on("/api/settings/network", HTTP_POST, std::bind(&Webserver::setNetworkSettings, this));
 
+  server.on("/api/led", HTTP_POST, std::bind(&Webserver::setLEDs, this));
+
+  server.on("/api/led/display", HTTP_OPTIONS, std::bind(&Webserver::sendCORS, this));
+  server.on("/api/led/display", HTTP_GET, std::bind(&Webserver::getDisplay, this));
+  server.on("/api/led/display", HTTP_POST, std::bind(&Webserver::setDisplay, this));
+
   server.onNotFound(std::bind( &Webserver::handleWebRequests, this));
 
   // Attach the OTA update service
@@ -135,7 +141,12 @@ void Webserver::check_for_spiffs_update() {
 
 
 void Webserver::handleWebRequests() {
-  Serial.println( "[Webserver] handleWebRequests: " +  server.uri() );
+  Serial.println( "[Webserver] handleWebRequests: " + server.uri() );
+
+  if ( server.method() == HTTP_OPTIONS ) {
+    sendCORS();
+    return;
+  }
 
   if ( authRequired() ) return;  // Page requires authentication
 
@@ -266,14 +277,16 @@ void Webserver::getNetworkSettings() {
 void Webserver::setNetworkSettings() {
   if ( authRequired() ) return;  // Page requires authentication
 
-  if (server.args() < 2) {
+  if (server.args() < 1) {
     httpReturn(400, "text/html", "Missing Data");
     return;
   }
 
   // Update config with values from form
-  _config->set( CONFIG_SSID, server.arg("ssid") );
-  _config->set( CONFIG_HOSTNAME, server.arg("hostname") );
+  if ( server.arg("ssid") )
+    _config->set( CONFIG_SSID, server.arg("ssid") );
+  if ( server.arg("hostname") )
+    _config->set( CONFIG_HOSTNAME, server.arg("hostname") );
 
   // Only change the wifi password if one was passed
   if ( server.arg("wifi_pw").length() > 0 )
@@ -295,12 +308,34 @@ void Webserver::setNetworkSettings() {
 
 
 // GET /display
+void Webserver::getDisplay() {
+  if ( authRequired() ) return;  // Page requires authentication
+  
+  httpReturn(200, "application/json", _led->getJSON());
+}
+
+
+// POST /led/display
 void Webserver::setDisplay() {
+    if ( authRequired() ) return;  // Page requires authentication
+
     _led->setDisplay(server.arg("mode").toInt(), server.arg("duration").toInt());
 
     // Success to the client.
     httpReturn( 200, "application/json", "{\"status\": \"ok\"}" );
 }
+
+// POST /led
+void Webserver::setLEDs() {
+    if ( authRequired() ) return;  // Page requires authentication
+
+    _led->setDelay( server.arg("delay").toInt() );
+    _led->setBrightness( server.arg( "brightness" ).toInt() );
+
+    // Success to the client.
+    httpReturn( 200, "application/json", "{\"status\": \"ok\"}" );
+}
+
 
 void Webserver::runWebUpdate() {
 }

@@ -22,7 +22,7 @@ export class LEDService {
 		return this.http.get<LED>( this.serviceUrl + '/display' )
 				.pipe(
 					tap( led => this.log( '[LEDService] fetched LED display' ) ),
-					catchError( this.handleError( 'getLEDs', { leds: 0, fps: 0 } ) )
+					catchError( this.handleError( 'getLEDs', { leds: 0, delay: 0, brightness: 0 } ) )
 				);
 	}
 
@@ -42,6 +42,21 @@ export class LEDService {
 //				catchError( this.handleError<any>('display') )
 //			);
 	}
+	
+	updateDisplay( led:LED ):Observable<any> {
+		let data = new FormData();
+
+		data.append( 'leds', led.leds.toString() );
+		data.append( 'delay', led.delay.toString() );
+		data.append( 'brightness', led.brightness.toString() );
+
+		return this.http.post( this.serviceUrl, data )
+			.pipe(
+				tap( _ => this.log( '[LEDService] update led display' ) ),
+				catchError( this.handleError<any>('updateDisplay') )
+			);
+	}
+
 
 	showAlert(): void {
 		this.display( 6, 10 );

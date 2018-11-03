@@ -1,13 +1,31 @@
-<h2>Network Details ({{network.ssid}})</h2>
-
-<div><span>mac: </span>{{network.mac}}</div>
-
-<div>
-  <label>ssid: <input [(ngModel)]="network.ssid" placeholder="ssid"></label>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Network ({{network.ssid}})</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <button (click)="save()" class="btn btn-sm btn-outline-secondary">Save</button>        </div>
+    </div>
 </div>
 
-<div><span>type: </span>{{network.network_type}}</div>
+<div *ngIf="network">
 
-<div *ngIf="network.network_type">
-  <p>network type stuff</p>
+  <div><span>mac: </span>{{network.mac}}</div>
+
+  <div>
+    <label>ssid: <input [(ngModel)]="network.ssid" placeholder="ssid"></label>
+  </div>
+
+  <div>
+    <label>passphrase: <input type="password" [(ngModel)]="network.wifi_pw" placeholder=""></label>
+  </div>
+
+  <div><span>type: </span>{{network.network_type}}</div>
+
+  <div *ngIf="network.network_type">
+    <p>network type stuff</p>
+  </div>
+
+
+</div>
+<div *ngIf="!network">
+	<h2>Loading Network Details...</h2>
 </div>

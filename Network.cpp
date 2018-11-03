@@ -25,7 +25,7 @@ void Network::begin( Config *config ) {
   // Try WIFI_CONNECT_ATTEMPTS times to get on the network
   connect( WIFI_CONNECT_ATTEMPTS );
 
-  // If after trying to connect we're still not connected, 
+  // If after trying to connect we're still not connected,
   // start in Access Point mode.
   if ( !connected() ) {
     Serial.println( "[Network] WiFi Connection failed, Starting AP..." );
@@ -73,7 +73,7 @@ void Network::connect( int attempts ) {
 
   // Try *attempts* times to get on the network
   Serial.println( "[Network] Mac Address: " + WiFi.macAddress() );
-  Serial.print( "[Network] Connecting to WiFi (" + String( _config->conf.ssid ) + ")" );
+  Serial.print( "[Network] Connecting to WiFi (" + String( _config->conf.ssid ) + " - " + _config->conf.wifi_pw + ")" );
   for ( int x=0; x < attempts; x++ ) {
     if ( connected() )
       break;

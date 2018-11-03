@@ -3,20 +3,22 @@ import { NgModule }           from '@angular/core';
 import { FormsModule }        from '@angular/forms';
 import { HttpClientModule,
          HTTP_INTERCEPTORS }  from '@angular/common/http';
-import { HttpAuthInterceptor } from './httpauth.interceptor';
+import { HttpAuthInterceptor } from './http.interceptor';
 
 import { AppComponent }       from './app.component';
 import { NetworkComponent }   from './network/network.component';
 import { MessagesComponent }  from './messages/messages.component';
 import { AppRoutingModule }   from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { LedComponent } from './led/led.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NetworkComponent,
     MessagesComponent,
-    DashboardComponent
+    DashboardComponent,
+    LedComponent
   ],
   imports: [
     BrowserModule,

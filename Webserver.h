@@ -49,7 +49,12 @@ class Webserver
     void processSettings();
     void getNetworkSettings();
     void setNetworkSettings();
+
+    void getDisplay();
     void setDisplay();
+
+    void setLEDs();
+    
     String get_spiffs_version();
     void check_for_fwupdate();
     void check_for_spiffs_update();
