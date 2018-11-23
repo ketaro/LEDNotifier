@@ -1,0 +1,23 @@
+<div *ngIf="palette">
+
+    <div class="input-group row">
+        <label class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-6">
+            <input [(ngModel)]="palette.name" class="form-control" />
+        </div>
+    </div>
+
+    <div class="input-group row">
+        <label class="col-sm-2 col-form-label">Palette</label>
+        <div class="col-sm-10">
+            <input *ngFor="let color of palette.colors; index as index;"
+                   type="color" [(ngModel)]="palette.colors[index]"  />
+        </div>
+    </div>
+
+    <button (click)="save()">save palette</button>
+
+</div>
+<div *ngIf="!palette">
+	<h3>Please select a palette</h3>
+</div>
