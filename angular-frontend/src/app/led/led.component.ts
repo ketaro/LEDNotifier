@@ -3,6 +3,10 @@ import { Location } from '@angular/common';
 
 import { LEDService } from '../led.service';
 import { LED } from '../led';
+import { Palette } from '../palette';
+
+// declare var $: any;
+
 
 @Component({
 	selector: 'app-led',
@@ -12,6 +16,7 @@ import { LED } from '../led';
 export class LedComponent implements OnInit {
 
 	led: LED;
+	palette: Palette;
 
 	constructor(
 		private ledService: LEDService,
@@ -22,7 +27,7 @@ export class LedComponent implements OnInit {
 	ngOnInit() {
 		this.getLEDs();
 	}
-
+	
 
 	getLEDs():void {
 		this.ledService.getLEDs()

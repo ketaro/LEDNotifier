@@ -49,6 +49,8 @@ class Webserver
     void processSettings();
     void getNetworkSettings();
     void setNetworkSettings();
+    void getPalettes();
+    void savePalette();
 
     void getDisplay();
     void setDisplay();

@@ -43,15 +43,18 @@ void Webserver::begin( Config *config, LED *led ) {
   server.on("/settings",  HTTP_POST, std::bind(&Webserver::processSettings, this));
   server.on("/webupdate", HTTP_POST, std::bind(&Webserver::runWebUpdate, this));
 
-  server.on("/api/settings/network", HTTP_OPTIONS, std::bind(&Webserver::sendCORS, this));
+//  server.on("/api/settings/network", HTTP_OPTIONS, std::bind(&Webserver::sendCORS, this));
   server.on("/api/settings/network", HTTP_GET,  std::bind(&Webserver::getNetworkSettings, this));
   server.on("/api/settings/network", HTTP_POST, std::bind(&Webserver::setNetworkSettings, this));
 
   server.on("/api/led", HTTP_POST, std::bind(&Webserver::setLEDs, this));
 
-  server.on("/api/led/display", HTTP_OPTIONS, std::bind(&Webserver::sendCORS, this));
+//  server.on("/api/led/display", HTTP_OPTIONS, std::bind(&Webserver::sendCORS, this));
   server.on("/api/led/display", HTTP_GET, std::bind(&Webserver::getDisplay, this));
   server.on("/api/led/display", HTTP_POST, std::bind(&Webserver::setDisplay, this));
+
+  server.on("/api/led/palettes", HTTP_GET, std::bind(&Webserver::getPalettes, this));
+  server.on("/api/led/palette", HTTP_POST, std::bind(&Webserver::savePalette, this));
 
   server.onNotFound(std::bind( &Webserver::handleWebRequests, this));
 
@@ -336,6 +339,55 @@ void Webserver::setLEDs() {
     httpReturn( 200, "application/json", "{\"status\": \"ok\"}" );
 }
 
+
+// GET /led/palettes
+void Webserver::getPalettes() {
+    Dir dir = SPIFFS.openDir( PALETTE_DIR );
+    String jsonstr = "";
+    
+    while (dir.next()) {
+        String fn = dir.fileName();
+        fn = fn.substring( sizeof(PALETTE_DIR) );
+        
+        Serial.println( "found palette file: " + fn );
+        jsonstr += ", \"" + fn + "\"";
+    }
+
+    if (jsonstr.length() > 1)
+        jsonstr = jsonstr.substring(2);
+
+    jsonstr = "{\"status\": \"ok\", \"palettes\": [ " + jsonstr + " ] }";
+    
+    httpReturn( 200, "application/json", "{\"status\": \"ok\", \"palettes\": " + jsonstr + " }" );
+   
+}
+
+// POST /led/palette
+// Stores a custom palette via SPIFFS
+void Webserver::savePalette() {
+    String palette_fn = String(PALETTE_DIR) + "/" + String( server.arg("name") );
+    File f = SPIFFS.open( palette_fn, "w" );
+    if (!f) {
+        Serial.println( "[Webserver] savePalette: failed to open palette file - " + palette_fn );
+        httpReturn( 500, "application/json", "{\"status\": \"ok\"}" );
+        return;
+    }
+
+    Serial.println( "[Webserver] savePalette: saving to - " + palette_fn );
+    for (uint8_t i=0; i < server.args(); i++) {
+        if ( server.argName(i) == "palette" ) {
+            Serial.println("[WebServer] savePalette: " + String(server.argName(i)) + " - " + String(server.arg(i)) );
+            f.println( server.arg(i) );
+        }
+    }
+    f.close();
+
+    // Reload the custom palettes
+    _led->loadCustomPalettes();
+    
+    // Success to the client.
+    httpReturn( 200, "application/json", "{\"status\": \"ok\"}" );
+}
 
 void Webserver::runWebUpdate() {
 }

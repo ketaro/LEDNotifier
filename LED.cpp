@@ -15,6 +15,8 @@
 // Some notes on the more abstract 'theory and practice' of
 // FastLED compact palettes are at the bottom of this file.
 
+#include <FS.h>
+
 #include "LED.h"
 #include "defaults.h"
 
@@ -30,6 +32,8 @@ LED::LED() {
 void LED::begin( Config *config ) {
     // Keep a reference to the config
     _config = config;
+
+    loadCustomPalettes();
   
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(_leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
     FastLED.setBrightness( BRIGHTNESS );
@@ -62,6 +66,18 @@ void LED::loop() {
       _duration = 0;
       _displayStart = millis();
     }
+}
+
+
+// Load custom palettes from the SPIFFS
+void LED::loadCustomPalettes() {
+    Serial.println( "[LED] Loading Custom Palettes from SPIFFS" );
+
+   Dir palette_dir = SPIFFS.openDir( PALETTE_DIR );
+   while (palette_dir.next()) {
+      Serial.println( "[LED] Loading Custom Palette: " + palette_dir.fileName() + " (" + palette_dir.fileSize() + ")" );
+   }
+
 }
 
 

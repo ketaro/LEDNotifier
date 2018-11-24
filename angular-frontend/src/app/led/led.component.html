@@ -8,34 +8,31 @@
 </div>
 
 <div *ngIf="led">
-	<div>
-		<label>
-			Number of LEDs: 
-			<input [(ngModel)]="led.leds" type="number" min="0" max="150" step="1">
-		</label>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">LEDs</label>
+		<div class="col-sm-1">
+            <input [(ngModel)]="led.leds" type="number" min="0" max="150" step="1">
+		</div>
 	</div>
 
-	<div>
-		<label>
-			Delay: 
-			<input [(ngModel)]="led.delay" (change)="update()" type="range" min="1" max="500" class="slider">
-		</label>
-		<label>Value:</label> {{ led.delay }}
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">Delay</label>
+		<div class="col-sm-6">
+    		<input [(ngModel)]="led.delay" (change)="update()" type="range" min="1" max="500" class="slider">
+		</div>
+		<div class="col-sm-1">
+    		{{ led.delay }}
+		</div>
 	</div>
 
-	<div>
-		<label>
-			Brightness: 
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">Brightness</label>
+		<div class="col-sm-6">
 			<input [(ngModel)]="led.brightness" (change)="update()" type="range" min="0" max="255" class="slider">
-		</label>
-		<label>Value:</label> {{ led.brightness }}
-	</div>
-
-	<div>
-		<label>
-			Color: 
-			<input id="demo" type="text" class="form-control" value="rgb(255, 128, 0)" />
-		</label>
+		</div>
+		<div class="col-sm-1">
+		    {{ led.brightness }}
+		</div>
 	</div>
 
 </div>
@@ -43,6 +40,3 @@
 	<h2>Loading LED Display State...</h2>
 </div>
 
-<script>
-$('#demo').colorpicker();
-</script>

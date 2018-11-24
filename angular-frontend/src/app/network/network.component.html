@@ -1,24 +1,42 @@
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Network ({{network.ssid}})</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group mr-2">
-            <button (click)="save()" class="btn btn-sm btn-outline-secondary">Save</button>        </div>
-    </div>
-</div>
-
 <div *ngIf="network">
 
-  <div><span>mac: </span>{{network.mac}}</div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Network ({{network.ssid}})</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <button (click)="save()" class="btn btn-sm btn-outline-secondary">Save</button>
+            </div>
+        </div>
+    </div>
 
-  <div>
-    <label>ssid: <input [(ngModel)]="network.ssid" placeholder="ssid"></label>
-  </div>
 
-  <div>
-    <label>passphrase: <input type="password" [(ngModel)]="network.wifi_pw" placeholder=""></label>
-  </div>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">MAC</label>
+		<div class="col-sm-6">
+    		{{network.mac}}
+		</div>
+	</div>
 
-  <div><span>type: </span>{{network.network_type}}</div>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">SSID</label>
+		<div class="col-sm-6">
+            <input [(ngModel)]="network.ssid" placeholder="ssid">
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">Passphrase</label>
+		<div class="col-sm-6">
+            <input type="password" [(ngModel)]="network.wifi_pw" placeholder="">
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">Network Type</label>
+		<div class="col-sm-6">
+    		{{network.network_type}}
+		</div>
+	</div>
 
   <div *ngIf="network.network_type">
     <p>network type stuff</p>

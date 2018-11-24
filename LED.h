@@ -9,7 +9,8 @@
 #include "Config.h"
 #include "defaults.h"
 
-#define UPDATES_PER_SECOND 100
+#define PALETTE_DIR         "/palettes"
+#define UPDATES_PER_SECOND  100
 
 
 #define DISPLAY_DARK 0
@@ -72,6 +73,7 @@ class LED
     void setDisplay( uint8_t mode, uint duration );
     void setDelay( uint delay );
     void setBrightness( uint8_t value );
+    void loadCustomPalettes();
     
   private:
     Config     *_config;
